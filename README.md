@@ -1,7 +1,13 @@
 # Karma 2 Community App 🏆 (Docker Edition)
 
 <p align="center">
-  <img src="karma-community-app!.png" width="800" alt="Karma Community App Screenshot" />
+  <img src="Karma-2-Screen1.jpg" width="800" alt="Karma 2 Dashboard" />
+</p>
+<p align="center">
+  <img src="Karma-2-Screen2.jpg" width="800" alt="Karma 2 Mobile Leaderboard" />
+</p>
+<p align="center">
+  <img src="Karma-2-Screen3.jpg" width="800" alt="Karma 2 Score Breakdown" />
 </p>
 
 Сучасний Telegram Mini App для гейміфікації спільноти. Ця версія (Karma 2) оптимізована для роботи в **Docker**-середовищі, підтримує легке горизонтальне масштабування (multi-tenancy), віддачу статичного React-застосунку та використовує **вдосконалену формулу розрахунку карми** для запобігання накруткам та спаму.
