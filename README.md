@@ -1,7 +1,7 @@
 # Karma 2 Community App 🏆 (Docker Edition)
 
 <p align="center">
-  **English** | [Українська](README.ua.md)
+  <b>English</b> | <a href="README.ua.md">Українська</a>
 </p>
 
 <p align="center">
