@@ -10,7 +10,7 @@ const TRANSLATIONS = {
     info_btn_label: 'Деталі про рейтинг',
     modal_close: 'Закрити',
     formula_title: '⚙️ Формула та вага рейтингу',
-    formula_intro: 'Карма формиється на основі повідомлень, відповідей та реакцій у групі:',
+    formula_intro: 'Карма формується на основі повідомлень, відповідей та реакцій у групі:',
     formula_guru: '(Гуру):',
     formula_flooder: '(Флудер):',
     formula_skeptic: '(Скептик):',
