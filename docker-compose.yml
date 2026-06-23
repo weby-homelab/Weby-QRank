@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  karma-symyrenka:
+    image: webyhomelab/karma-2-community-app:latest
+    container_name: karma-symyrenka
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3017:3000"
+    environment:
+      - DB_PATH=/app/backend/data/karma.db
+      - BOT_TOKEN=DUMMY_TOKEN
+    volumes:
+      - ./data/symyrenka:/app/backend/data
+  karma-bui-studies:
+    image: webyhomelab/karma-2-community-app:latest
+    container_name: karma-bui-studies
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3020:3000"
+    environment:
+      - DB_PATH=/app/backend/data/karma.db
+      - BOT_TOKEN=DUMMY_TOKEN
+      - TRUST_PROXY=true
+    volumes:
+      - ./data/bui-studies:/app/backend/data
+  karma-kruhlyk-chat:
+    image: webyhomelab/karma-2-community-app:latest
+    container_name: karma-kruhlyk-chat
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3021:3000"
+    environment:
+      - DB_PATH=/app/backend/data/karma.db
+      - BOT_TOKEN=DUMMY_TOKEN
+      - TRUST_PROXY=true
+    volumes:
+      - ./data/kruhlyk-chat:/app/backend/data
+  karma-kruhlyk-group:
+    image: webyhomelab/karma-2-community-app:latest
+    container_name: karma-kruhlyk-group
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3022:3000"
+    environment:
+      - DB_PATH=/app/backend/data/karma.db
+      - BOT_TOKEN=DUMMY_TOKEN
+      - TRUST_PROXY=true
+    volumes:
+      - ./data/kruhlyk-group:/app/backend/data

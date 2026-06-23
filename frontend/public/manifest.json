@@ -1,0 +1,17 @@
+{
+  "name": "Karma Community App",
+  "short_name": "Karma App",
+  "description": "Офіційний рейтинг активності",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#1e1e24",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
