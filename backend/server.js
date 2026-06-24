@@ -11,7 +11,7 @@ const { recalculateUserKarma } = require('./karma');
 const app = express();
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 50 * 1024 * 1024 } // Limit file size to 50MB
+  limits: { fileSize: 200 * 1024 * 1024 } // Limit file size to 200MB
 });
 
 const bcrypt = require('bcryptjs');
@@ -44,7 +44,8 @@ const apiLimiter = rateLimit({
   max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-  message: { error: 'Too many requests from this IP, please try again after 15 minutes' }
+  message: { error: 'Too many requests from this IP, please try again after 15 minutes' },
+  validate: { trustProxy: false }
 });
 
 app.use(cors());
@@ -62,7 +63,7 @@ app.use(express.static(path.join(__dirname, 'public'), { index: false }));
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     if (err.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ error: 'Файл надто великий. Максимальний розмір: 50MB' });
+      return res.status(400).json({ error: 'Файл надто великий. Максимальний розмір: 200MB' });
     }
   }
   next(err);
