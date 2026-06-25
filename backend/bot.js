@@ -1,12 +1,12 @@
 const { Bot } = require('grammy');
 const { getDb } = require('./db');
 const { 
-  recalculateUserKarma, 
+  recalculateUserQRank, 
   FLOODER_EMOJIS, 
   GURU_EMOJIS, 
   SKEPTIC_EMOJIS, 
   NEGATIVE_EMOJIS 
-} = require('./karma');
+} = require('./qrank');
 
 const VALID_EMOJIS = [...FLOODER_EMOJIS, ...GURU_EMOJIS, ...SKEPTIC_EMOJIS, ...NEGATIVE_EMOJIS];
 
@@ -26,7 +26,7 @@ async function startBot(token, webAppUrl, targetChatId) {
     const db = await getDb();
     await registerUser(db, ctx.from);
     
-    await ctx.reply('Вітаємо у Karma Community! Натисніть кнопку нижче, щоб відкрити додаток.', {
+    await ctx.reply('Вітаємо у QRank Community! Натисніть кнопку нижче, щоб відкрити додаток.', {
       reply_markup: {
         inline_keyboard: [
           [{ text: 'Відкрити App', web_app: { url: webAppUrl } }]
@@ -68,12 +68,12 @@ async function startBot(token, webAppUrl, targetChatId) {
         }
       }
 
-      // Recalculate sender's karma (total messages count changed, affecting Quality Index Q)
-      await recalculateUserKarma(db, ctx.from.id);
+      // Recalculate sender's QRank (total messages count changed, affecting Quality Index Q)
+      await recalculateUserQRank(db, ctx.from.id);
       
-      // Recalculate parent author's karma (received reply)
+      // Recalculate parent author's QRank (received reply)
       if (parentAuthorRecalc) {
-        await recalculateUserKarma(db, parentAuthorRecalc);
+        await recalculateUserQRank(db, parentAuthorRecalc);
       }
       
       if (res.changes > 0 || parentAuthorRecalc) {
@@ -133,8 +133,8 @@ async function startBot(token, webAppUrl, targetChatId) {
     }
     
     if (dbUpdated) {
-      // Recalculate target user's karma
-      await recalculateUserKarma(db, authorId);
+      // Recalculate target user's QRank
+      await recalculateUserQRank(db, authorId);
       await updateLastUpdateTime(db);
     }
   });

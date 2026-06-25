@@ -14,7 +14,7 @@ const ACTION_WEIGHTS = {
   REPLY_RECEIVED: 1.0,
 };
 
-async function recalculateUserKarma(db, userId) {
+async function recalculateUserQRank(db, userId) {
   const nowUnix = Math.floor(Date.now() / 1000);
 
   // 1. Get user messages
@@ -164,5 +164,5 @@ module.exports = {
   SKEPTIC_EMOJIS,
   NEGATIVE_EMOJIS,
   EMOJI_WEIGHTS,
-  recalculateUserKarma
+  recalculateUserQRank
 };

@@ -17,7 +17,7 @@ if (!CHAT_ID) {
 }
 
 async function main() {
-  const dbPath = process.env.DB_PATH || path.join(__dirname, 'karma.db');
+  const dbPath = process.env.DB_PATH || path.join(__dirname, 'qrank.db');
   const db = await open({
     filename: dbPath,
     driver: sqlite3.Database

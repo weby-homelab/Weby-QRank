@@ -90,12 +90,12 @@ const TRANSLATIONS = {
 
 export default function Admin() {
   const [lang, setLang] = useState(() => {
-    return localStorage.getItem('karma_lang') || 'en';
+    return localStorage.getItem('qrank_lang') || 'en';
   });
 
   const toggleLang = (l) => {
     setLang(l);
-    localStorage.setItem('karma_lang', l);
+    localStorage.setItem('qrank_lang', l);
   };
 
   const t = TRANSLATIONS[lang];

@@ -1,6 +1,6 @@
 {
-  "name": "Karma Community App",
-  "short_name": "Karma App",
+  "name": "Weby-QRank Community App",
+  "short_name": "Weby-QRank",
   "description": "Офіційний рейтинг активності",
   "start_url": "/",
   "display": "standalone",

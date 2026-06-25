@@ -9,8 +9,8 @@ const TRANSLATIONS = {
     error_fallback: 'Сервер тимчасово недоступний (можливо, перезапускається). Спробуйте оновити сторінку за хвилину.',
     info_btn_label: 'Деталі про рейтинг',
     modal_close: 'Закрити',
-    formula_title: '⚙️ Формула та вага рейтингу',
-    formula_intro: 'Карма формується на основі повідомлень, відповідей та реакцій у групі:',
+    formula_title: '⚙️ Формула та вага скорингу',
+    formula_intro: 'QRank формується на основі повідомлень, відповідей та реакцій у групі:',
     formula_guru: '(Гуру):',
     formula_flooder: '(Флудер):',
     formula_skeptic: '(Скептик):',
@@ -18,10 +18,8 @@ const TRANSLATIONS = {
     formula_reply: 'Отримання відповіді (Reply):',
     formula_msg: 'Надсилання повідомлення:',
     quality_index: 'Індекс якості:',
-    quality_desc: 'Масовий флуд без зворотних реакцій суттєво знижує підсумкову карму.',
-    anti_cheat: 'Анти-накрутка:',
-    anti_cheat_desc: 'Повторні реакції між тими ж користувачами мають згасаючу вагу.',
-    welcome_title: '👋 Ласкаво просимо до KARMA-2-Community-app!',
+    quality_desc: 'Масовий флуд без зворотних реакцій суттєво знижує підсумковий QRank.',
+    welcome_title: '👋 Ласкаво просимо до Weby-QRank!',
     welcome_intro: 'Ваша система оцінки активності чату ще не налаштована. Слідуйте цим простим крокам, щоб запустити її:',
     step1_title: '🤖 Додайте бота до чату',
     step1_desc: 'Запросіть вашого Telegram-бота в групу як адміністратора, щоб він міг реєструвати реакції на повідомлення.',
@@ -39,7 +37,7 @@ const TRANSLATIONS = {
     skeptic_tag: 'Скептик / -Аналітик / Думер',
     detail_title: '📊 Розшифровка активності',
     detail_rank: 'Ранг у рейтингу:',
-    detail_karma: 'Карма:',
+    detail_karma: 'QRank:',
     sent_msg: 'Надіслано повідомлень',
     received_replies: 'Отримано відповідей (Replies)',
     reactions_guru: 'Реакції «Гуру» (🔥, 👍, ❤️, тощо)',
@@ -60,7 +58,7 @@ const TRANSLATIONS = {
     info_btn_label: 'Scoring Details',
     modal_close: 'Close',
     formula_title: '⚙️ Scoring Formula & Weights',
-    formula_intro: 'Karma is calculated based on messages, replies, and reactions in the group:',
+    formula_intro: 'QRank is calculated based on messages, replies, and reactions in the group:',
     formula_guru: '(Guru):',
     formula_flooder: '(Flooder):',
     formula_skeptic: '(Skeptic):',
@@ -68,10 +66,8 @@ const TRANSLATIONS = {
     formula_reply: 'Receiving reply (Reply):',
     formula_msg: 'Sending message:',
     quality_index: 'Quality Index:',
-    quality_desc: 'Mass flooding without outgoing reactions severely reduces the final karma.',
-    anti_cheat: 'Anti-boost Protection:',
-    anti_cheat_desc: 'Repeated reactions between the same users have decaying weight.',
-    welcome_title: '👋 Welcome to KARMA-2-Community-app!',
+    quality_desc: 'Mass flooding without outgoing reactions severely reduces the final QRank.',
+    welcome_title: '👋 Welcome to Weby-QRank!',
     welcome_intro: 'Your chat activity scoring system is not set up yet. Follow these simple steps to launch it:',
     step1_title: '🤖 Add Bot to Chat',
     step1_desc: 'Invite your Telegram bot to the group as an admin so it can register message reactions.',
@@ -89,7 +85,7 @@ const TRANSLATIONS = {
     skeptic_tag: 'Skeptic / Analyst / Doomer',
     detail_title: '📊 Activity Breakdown',
     detail_rank: 'Leaderboard Rank:',
-    detail_karma: 'Karma:',
+    detail_karma: 'QRank:',
     sent_msg: 'Messages sent',
     received_replies: 'Replies received',
     reactions_guru: 'Guru reactions (🔥, 👍, ❤️, etc.)',
@@ -115,12 +111,12 @@ function App() {
   const [activeUserDetail, setActiveUserDetail] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [lang, setLang] = useState(() => {
-    return localStorage.getItem('karma_lang') || 'en';
+    return localStorage.getItem('qrank_lang') || 'en';
   });
 
   const toggleLang = (l) => {
     setLang(l);
-    localStorage.setItem('karma_lang', l);
+    localStorage.setItem('qrank_lang', l);
   };
 
   const t = TRANSLATIONS[lang];
@@ -465,13 +461,13 @@ function App() {
 
       <footer className="footer-credits">
         <p>
-          <a href="https://github.com/weby-homelab/karma-2-community-app" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/weby-homelab/weby-qrank" target="_blank" rel="noopener noreferrer">
             {t.last_updated} {settings.last_update}
           </a>
         </p>
         <p>
           &copy; 2026 Weby Homelab &bull;{' '}
-          <a href="https://github.com/weby-homelab/karma-2-community-app" target="_blank" rel="noopener noreferrer" className="version-link">
+          <a href="https://github.com/weby-homelab/weby-qrank" target="_blank" rel="noopener noreferrer" className="version-link">
             v{version}
           </a>
         </p>

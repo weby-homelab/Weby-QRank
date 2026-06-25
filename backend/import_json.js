@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { getDb } = require('./db');
 const { updateSettings } = require('./settings');
-const { recalculateUserKarma } = require('./karma');
+const { recalculateUserQRank } = require('./qrank');
 
 async function importData() {
   console.log('Loading result-5.json...');
@@ -149,7 +149,7 @@ async function importData() {
     // 5. Recalculate karma for all users
     console.log('Recalculating karma for all users...');
     for (const userId of userInfos.keys()) {
-      await recalculateUserKarma(db, userId);
+      await recalculateUserQRank(db, userId);
     }
 
     await db.exec('COMMIT');

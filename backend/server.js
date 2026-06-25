@@ -6,7 +6,7 @@ const multer = require('multer');
 const { getDb } = require('./db');
 const { getSettings, updateSettings } = require('./settings');
 const { startBot } = require('./bot');
-const { recalculateUserKarma } = require('./karma');
+const { recalculateUserQRank } = require('./qrank');
 
 const app = express();
 const upload = multer({
@@ -385,7 +385,7 @@ app.post('/api/admin/upload-json', upload.single('file'), async (req, res) => {
 
       // 5. Recalculate karma for all users
       for (const userId of userInfos.keys()) {
-        await recalculateUserKarma(db, userId);
+        await recalculateUserQRank(db, userId);
       }
       
       await db.exec('COMMIT');

@@ -17,7 +17,7 @@ COPY backend/ ./
 COPY --from=frontend-builder /app/frontend/dist ./public
 # Create data directory for volume mapping
 RUN mkdir -p data
-ENV DB_PATH=/app/backend/data/karma.db
+ENV DB_PATH=/app/backend/data/qrank.db
 ENV PORT=3000
 EXPOSE 3000
 

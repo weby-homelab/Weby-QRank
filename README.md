@@ -1,32 +1,32 @@
-# Karma 2 Community App 🏆 (Docker Edition)
+# Weby-QRank Community App 🏆 (Docker Edition)
 
 <p align="center">
   <b>EN</b> | <a href="README.ua.md">UA</a>
 </p>
 
 <p align="center">
-  <img src="Karma-2-Screen1.png" width="800" alt="Karma 2 Dashboard" />
+  <img src="weby-qrank-screen1.png" width="800" alt="Weby-QRank Dashboard" />
 </p>
 <p align="center">
-  <img src="Karma-2-Screen2.png" width="800" alt="Karma 2 Mobile Leaderboard" />
+  <img src="weby-qrank-screen2.png" width="800" alt="Weby-QRank Mobile Leaderboard" />
 </p>
 <p align="center">
-  <img src="Karma-2-Screen3.png" width="800" alt="Karma 2 Score Breakdown" />
+  <img src="weby-qrank-screen3.png" width="800" alt="Weby-QRank Score Breakdown" />
 </p>
 
-🚀 Meet Karma 2 — the evolution of gamification for your Telegram community!
+🚀 Meet Weby-QRank — the evolution of reputation engine for your Telegram community!
 
 Tired of rating manipulations and meaningless flood?
 
 Want to see real opinion leaders and support quality communication?
 
-Karma 2 is a modern Telegram Mini App that turns chat life into a transparent game protected from spam and manipulation.
+Weby-QRank is a modern Telegram Mini App that turns chat life into a transparent game protected from spam and manipulation.
 
-⚡️ Why Karma 2 is the new standard:
+⚡️ Why Weby-QRank is the new standard:
 
 *   🎨 **Premium OLED Dark UI**: Elegant Bento Grid style design with blurred frosted glass (glassmorphism), mesh-gradients, and cascading loading animations.
 *   ⚖️ **Smart Mathematical Scoring**:
-    *   *Quality Index (Q)* — mass flood without feedback devalues karma.
+    *   *Quality Index (Q)* — mass flood without feedback devalues reputation.
     *   *Anti-manipulation* — reaction weights between a pair of users decay over time, blocking collusions.
     *   *Reactor Reputation* — a like from a veteran user weighs more than from a newcomer.
     *   *Time Decay* — old messages lose weight (half-life: 30 days), keeping the rating dynamic.
@@ -36,11 +36,11 @@ Karma 2 is a modern Telegram Mini App that turns chat life into a transparent ga
 
 ---
 
-🔗 Make your chat a place of quality communication with Karma 2!
+🔗 Make your chat a place of quality communication with Weby-QRank!
 
-Open source code, quick start guide, and algorithm documentation are available in the repository: [Karma 2](https://github.com/weby-homelab/karma-2-community-app)
+Open source code, quick start guide, and algorithm documentation are available in the repository: [Weby-QRank](https://github.com/weby-homelab/weby-qrank)
 
-![Karma 2 Community App Banner](https://img.shields.io/badge/Status-Active-success)  ![License](https://img.shields.io/badge/License-MIT-blue)  ![Stack](https://img.shields.io/badge/Stack-Node.js%20|%20Docker%20|%20SQLite-blueviolet)
+![Weby-QRank Community App Banner](https://img.shields.io/badge/Status-Active-success)  ![License](https://img.shields.io/badge/License-MIT-blue)  ![Stack](https://img.shields.io/badge/Stack-Node.js%20|%20Docker%20|%20SQLite-blueviolet)
 
 ---
 
@@ -55,11 +55,11 @@ graph TD
     subgraph "Docker Host"
       Proxy[🌐 Reverse Proxy<br/><i>Cloudflared / Nginx / Traefik</i>]
       
-      subgraph "karma-2-community-app (Container)"
+      subgraph "weby-qrank (Container)"
         Node[🟢 Node.js 22<br/><i>Express + grammY + React SPA</i>]
       end
       
-      DB[(🗄️ SQLite Data Volume<br/><i>./data/karma.db</i>)]
+      DB[(🗄️ SQLite Data Volume<br/><i>./data/qrank.db</i>)]
     end
 
     %% Connections
@@ -82,9 +82,9 @@ graph TD
 
 ---
 
-## ⚖️ Scoring Algorithm & Formulas (Karma-2)
+## ⚖️ Scoring Algorithm & Formulas (QRank)
 
-To ensure a fair leaderboard and prevent user collusion, Karma 2 combines several progressive mathematical approaches:
+To ensure a fair leaderboard and prevent user collusion, Weby-QRank combines several progressive mathematical approaches:
 
 ### 1. Balance of Quality and Quantity (Quality Index)
 Prevents boosting through mass messaging (flood / spam). A quality index $Q \in (0, 1]$ is calculated:
@@ -107,12 +107,12 @@ where $k$ is the sequence number of the reaction from user A to user B.
 The total influence of A on B is limited by the harmonic number $H_k \approx \ln(k) + \gamma$.
 
 ### 3. Reactor Reputation
-A reaction from a user with high karma weighs more than from a newcomer with zero karma:
+A reaction from a user with high QRank weighs more than from a newcomer with zero rating:
 
 $$W_{\text{reactor}} = \log_{10}(10 + K_{\text{weighted}})$$
 
-- A user with karma $0$ has a multiplier of $1.0$.
-- A user with karma $90$ has a multiplier of $2.0$.
+- A user with QRank $0$ has a multiplier of $1.0$.
+- A user with QRank $90$ has a multiplier of $2.0$.
 
 ### 4. Weight of Each Action
 | Action | Base Weight | Description |
@@ -132,22 +132,22 @@ The easiest way to deploy the application:
 
 1.  **Create a working directory:**
     ```bash
-    mkdir karma-2-app && cd karma-2-app
+    mkdir weby-qrank-app && cd weby-qrank-app
     ```
 
 2.  **Create a `docker-compose.yml` file:**
     ```yaml
     version: '3.8'
     services:
-      karma-bot:
-        image: webyhomelab/karma-2-community-app:latest
-        container_name: karma-bot
+      qrank-bot:
+        image: webyhomelab/weby-qrank:latest
+        container_name: qrank-bot
         restart: unless-stopped
         ports:
           - "3015:3000"
         environment:
           - BOT_TOKEN=Your_Telegram_Bot_Token
-          - DB_PATH=/app/backend/data/karma.db
+          - DB_PATH=/app/backend/data/qrank.db
           - TRUST_PROXY=true
         volumes:
           - ./data:/app/backend/data
@@ -162,24 +162,25 @@ The application will be available on port 3015. All data is securely stored in t
 ---
 
 ## ⚙️ Admin Panel
+
 Configuration is easily done via the built-in admin panel at `/admin`.
 
-![Admin Panel](karma-community-app-admin-panel.png)
+![Admin Panel](weby-qrank-admin-panel.png)
 
 **Available settings:**
 *   **Site Title:** (e.g. *🏆 KRUHLYK Community Leaderboard*)
 *   **Telegram Bot Token:** `123456789:ABCdefGHIjklmNOPqrsTUVwxyz`
 *   **Chat ID (optional):** `-100123456789`
-*   **WebApp URL (for the Start button):** `https://kruhlyk.srvrs.top/`
+*   **WebApp URL (for the Start button):** `https://qrank.weby.one/`
 *   **Telegram ID of the chat owner:** (for prominent display at the top of the leaderboard)
 *   **Change Admin Password:** (leave empty if not needed)
-*   **Data Import:** Ability to upload a karma backup in JSON format with full retrospective karma calculation based on the new rules.
+*   **Data Import:** Ability to upload a Telegram chat export in JSON format with full retrospective reputation calculation based on the new rules.
 
 ---
 
 ## 🤖 Telegram Bot Creation, Setup & Integration
 
-For karma to be calculated correctly, the bot must be properly created, configured, and added to the group:
+For QRank to be calculated correctly, the bot must be properly created, configured, and added to the group:
 
 ### 1. Creating a bot via BotFather
 1. Find the official **@BotFather** on Telegram and start a chat.

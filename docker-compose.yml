@@ -1,85 +1,85 @@
 version: '3.8'
 
 services:
-  karma-symyrenka:
-    image: webyhomelab/karma-2-community-app:latest
-    container_name: karma-symyrenka
+  qrank-symyrenka:
+    image: webyhomelab/weby-qrank:latest
+    container_name: qrank-symyrenka
     restart: unless-stopped
     ports:
       - "127.0.0.1:3017:3000"
     environment:
-      - DB_PATH=/app/backend/data/karma.db
+      - DB_PATH=/app/backend/data/qrank.db
       - BOT_TOKEN=DUMMY_TOKEN
     volumes:
       - ./data/symyrenka:/app/backend/data
-  karma-bui-studies:
-    image: webyhomelab/karma-2-community-app:latest
-    container_name: karma-bui-studies
+  qrank-bui-studies:
+    image: webyhomelab/weby-qrank:latest
+    container_name: qrank-bui-studies
     restart: unless-stopped
     ports:
       - "127.0.0.1:3020:3000"
     environment:
-      - DB_PATH=/app/backend/data/karma.db
+      - DB_PATH=/app/backend/data/qrank.db
       - BOT_TOKEN=DUMMY_TOKEN
       - TRUST_PROXY=true
     volumes:
       - ./data/bui-studies:/app/backend/data
-  karma-kruhlyk-chat:
-    image: webyhomelab/karma-2-community-app:latest
-    container_name: karma-kruhlyk-chat
+  qrank-kruhlyk-chat:
+    image: webyhomelab/weby-qrank:latest
+    container_name: qrank-kruhlyk-chat
     restart: unless-stopped
     ports:
       - "127.0.0.1:3021:3000"
     environment:
-      - DB_PATH=/app/backend/data/karma.db
+      - DB_PATH=/app/backend/data/qrank.db
       - BOT_TOKEN=DUMMY_TOKEN
       - TRUST_PROXY=true
     volumes:
       - ./data/kruhlyk-chat:/app/backend/data
-  karma-kruhlyk-group:
-    image: webyhomelab/karma-2-community-app:latest
-    container_name: karma-kruhlyk-group
+  qrank-kruhlyk-group:
+    image: webyhomelab/weby-qrank:latest
+    container_name: qrank-kruhlyk-group
     restart: unless-stopped
     ports:
       - "127.0.0.1:3022:3000"
     environment:
-      - DB_PATH=/app/backend/data/karma.db
+      - DB_PATH=/app/backend/data/qrank.db
       - BOT_TOKEN=DUMMY_TOKEN
       - TRUST_PROXY=true
     volumes:
       - ./data/kruhlyk-group:/app/backend/data
-  karma-ai-automation-lab:
-    image: webyhomelab/karma-2-community-app:latest
-    container_name: karma-ai-automation-lab
+  qrank-ai-automation-lab:
+    image: webyhomelab/weby-qrank:latest
+    container_name: qrank-ai-automation-lab
     restart: unless-stopped
     ports:
       - "127.0.0.1:3024:3000"
     environment:
-      - DB_PATH=/app/backend/data/karma.db
+      - DB_PATH=/app/backend/data/qrank.db
       - BOT_TOKEN=DUMMY_TOKEN
       - TRUST_PROXY=true
     volumes:
       - ./data/ai-automation-lab:/app/backend/data
-  karma-flash-chat:
-    image: webyhomelab/karma-2-community-app:latest
-    container_name: karma-flash-chat
+  qrank-flash-chat:
+    image: webyhomelab/weby-qrank:latest
+    container_name: qrank-flash-chat
     restart: unless-stopped
     ports:
       - "127.0.0.1:3025:3000"
     environment:
-      - DB_PATH=/app/backend/data/karma.db
+      - DB_PATH=/app/backend/data/qrank.db
       - BOT_TOKEN=DUMMY_TOKEN
       - TRUST_PROXY=true
     volumes:
       - ./data/flash-chat:/app/backend/data
-  karma-design-dvizh:
-    image: webyhomelab/karma-2-community-app:latest
-    container_name: karma-design-dvizh
+  qrank-design-dvizh:
+    image: webyhomelab/weby-qrank:latest
+    container_name: qrank-design-dvizh
     restart: unless-stopped
     ports:
       - "127.0.0.1:3026:3000"
     environment:
-      - DB_PATH=/app/backend/data/karma.db
+      - DB_PATH=/app/backend/data/qrank.db
       - BOT_TOKEN=DUMMY_TOKEN
       - TRUST_PROXY=true
     volumes:
