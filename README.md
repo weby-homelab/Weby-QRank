@@ -44,6 +44,22 @@ Open source code, quick start guide, and algorithm documentation are available i
 
 ---
 
+## 🚀 One-Line Install
+
+Deploy everything instantly with a single command:
+
+**Using curl:**
+```bash
+curl -sSL https://raw.githubusercontent.com/weby-homelab/Weby-QRank/main/setup.sh | bash
+```
+
+**Using wget:**
+```bash
+wget -qO- https://raw.githubusercontent.com/weby-homelab/Weby-QRank/main/setup.sh | bash
+```
+
+---
+
 ## 🏗️ System Architecture (Docker)
 
 ```mermaid
