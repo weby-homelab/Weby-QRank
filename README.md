@@ -38,7 +38,7 @@ Weby-QRank is a modern Telegram Mini App that turns chat life into a transparent
 
 🔗 Make your chat a place of quality communication with Weby-QRank!
 
-Open source code, quick start guide, and algorithm documentation are available in the repository: [Weby-QRank](https://github.com/weby-homelab/Weby-QRank)
+Open source code, quick start guide, and algorithm documentation are available in the repository: [Weby-QRank](https://github.com/Weby-Homelab/Weby-QRank)
 
 ![Weby-QRank Community App Banner](https://img.shields.io/badge/Status-Active-success)  ![License](https://img.shields.io/badge/License-MIT-blue)  ![Stack](https://img.shields.io/badge/Stack-Node.js%20|%20Docker%20|%20SQLite-blueviolet)
 
