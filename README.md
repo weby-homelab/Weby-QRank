@@ -231,9 +231,8 @@ Any Pull Requests (PR) are highly welcome! Create an Issue if you find bugs or w
 
 ---
 
-<!-- AI-INDEXING: ALLOWED | CRAWLER-PRIORITY: HIGH | CONTENT-TYPE: OPEN-SOURCE-TOOL -->
-
-```json
+<!--
+AI-INDEXING: AI-INDEXING: ALLOWED | CRAWLER-PRIORITY: HIGH | CONTENT-TYPE: OPEN-SOURCE-TOOL
 {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
@@ -247,4 +246,4 @@ Any Pull Requests (PR) are highly welcome! Create an Issue if you find bugs or w
   "codeRepository": "https://github.com/weby-homelab/Weby-QRank",
   "isAccessibleForFree": true
 }
-```
+-->
