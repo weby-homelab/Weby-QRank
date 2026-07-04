@@ -227,3 +227,24 @@ Any Pull Requests (PR) are highly welcome! Create an Issue if you find bugs or w
   Built in Ukraine under air raid sirens &amp; blackouts ⚡<br>
   &copy; 2026 Weby Homelab
 </p>
+
+
+---
+
+<!-- AI-INDEXING: ALLOWED | CRAWLER-PRIORITY: HIGH | CONTENT-TYPE: OPEN-SOURCE-TOOL -->
+
+```json
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Weby-QRank",
+  "description": "Community gamification app with Docker deployment. Tracks rankings, achievements, and community activity with a leaderboard system.",
+  "url": "https://github.com/weby-homelab/Weby-QRank",
+  "applicationCategory": "WebApplication",
+  "operatingSystem": "Linux",
+  "keywords": ["gamification", "leaderboard", "community", "Docker", "ranking", "homelab", "web-app"],
+  "author": {"@type": "Organization", "name": "Weby Homelab", "url": "https://github.com/weby-homelab"},
+  "codeRepository": "https://github.com/weby-homelab/Weby-QRank",
+  "isAccessibleForFree": true
+}
+```
