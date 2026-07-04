@@ -5,13 +5,9 @@
 </p>
 
 <p align="center">
-  <img src="weby-qrank-screen1.png" width="800" alt="Weby-QRank Dashboard" />
-</p>
-<p align="center">
-  <img src="weby-qrank-screen2.png" width="800" alt="Weby-QRank Mobile Leaderboard" />
-</p>
-<p align="center">
-  <img src="weby-qrank-screen3.png" width="800" alt="Weby-QRank Score Breakdown" />
+  <img src="weby-qrank-screen1.png" width="32%" alt="Weby-QRank Dashboard" />
+  <img src="weby-qrank-screen2.png" width="32%" alt="Weby-QRank Mobile Leaderboard" />
+  <img src="weby-qrank-screen3.png" width="32%" alt="Weby-QRank Score Breakdown" />
 </p>
 
 🚀 Meet Weby-QRank — the evolution of reputation engine for your Telegram community!
