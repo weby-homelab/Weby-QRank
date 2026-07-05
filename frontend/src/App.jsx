@@ -137,7 +137,7 @@ function App() {
     setDetailLoading(true);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '';
-      const response = await fetch(`${apiUrl}/api/user/${user.id}`);
+      const response = await fetch(`${apiUrl}/api/user/${user.id}?period=${period}`);
       if (response.ok) {
         const details = await response.json();
         setActiveUserDetail(details);
@@ -196,7 +196,7 @@ function App() {
           }).toString();
           
           try {
-            const profileData = await fetchWithRetry(`${apiUrl}/api/user/${user.id}?${queryParams}`, 3, 1000);
+            const profileData = await fetchWithRetry(`${apiUrl}/api/user/${user.id}?${queryParams}&period=${period}`, 3, 1000);
             setMyProfile(profileData);
           } catch (e) {
             // User not found or server error
