@@ -486,7 +486,7 @@ app.post('/api/admin/upload-json', upload.single('file'), async (req, res) => {
 app.get('/api/user/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { username, first_name } = req.query;
+    const { username, first_name, period } = req.query;
     const db = await getDb();
     
     let user = await db.get('SELECT id, username, first_name, karma, karma_flooder, karma_guru, karma_skeptic, message_count, engaged_message_count, join_date FROM users WHERE id = ?', id);
@@ -504,17 +504,60 @@ app.get('/api/user/:id', async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Get replies received count
+    // If period is specified and is not 'all', dynamically compute from period leaderboard
+    if (period && period !== 'all') {
+      let days = 30;
+      if (period === '1d') days = 1;
+      else if (period === '7d') days = 7;
+      else if (period === '30d') days = 30;
+
+      const maxMsgRow = await db.get("SELECT MAX(date_unixtime) as max_date FROM messages");
+      const referenceTime = (maxMsgRow && maxMsgRow.max_date > 0) ? maxMsgRow.max_date : Math.floor(Date.now() / 1000);
+
+      const currStart = referenceTime - days * 24 * 3600;
+      const currEnd = referenceTime;
+
+      const leaderboard = await getLeaderboardForPeriod(db, currStart, currEnd);
+      const userIndex = leaderboard.findIndex(u => u.id === parseInt(id, 10));
+
+      if (userIndex !== -1) {
+        const pUser = leaderboard[userIndex];
+        return res.json({
+          ...pUser,
+          rank: userIndex + 1
+        });
+      } else {
+        // User has no activity in this period
+        return res.json({
+          id: user.id,
+          username: user.username,
+          first_name: user.first_name,
+          join_date: user.join_date,
+          karma: 0,
+          karma_flooder: 0,
+          karma_guru: 0,
+          karma_skeptic: 0,
+          message_count: 0,
+          engaged_message_count: 0,
+          replies_count: 0,
+          reactions_flooder_count: 0,
+          reactions_guru_count: 0,
+          reactions_skeptic_count: 0,
+          reactions_negative_count: 0,
+          rank: '?'
+        });
+      }
+    }
+
+    // Default: 'all' (all-time database values)
     const repliesRow = await db.get('SELECT COUNT(*) as total FROM replies WHERE author_id = ?', [user.id]);
     const repliesCount = repliesRow ? repliesRow.total : 0;
 
-    // Get reactions count by category
     const rxFlooder = await db.get(`SELECT COUNT(*) as total FROM reactions WHERE author_id = ? AND emoji IN ('😁', '🤣', '🤪')`, [user.id]);
     const rxGuru = await db.get(`SELECT COUNT(*) as total FROM reactions WHERE author_id = ? AND emoji IN ('🔥', '👍', '💯', '🤝', '🫡', '❤️', '❤', '❤️🔥', '👌', '😎')`, [user.id]);
     const rxSkeptic = await db.get(`SELECT COUNT(*) as total FROM reactions WHERE author_id = ? AND emoji IN ('🤔', '👀', '🤷‍♂️', '🤷\u200d♂️', '🤷', '🤯', '😱', '😢', '🙈', '🥴')`, [user.id]);
     const rxNegative = await db.get(`SELECT COUNT(*) as total FROM reactions WHERE author_id = ? AND emoji IN ('👎', '🤮', '💩')`, [user.id]);
 
-    // Rank logic
     const rankData = await db.get(
       'SELECT COUNT(*) as rank FROM users WHERE karma > ? OR (karma = ? AND join_date < ?) OR (karma = ? AND join_date = ? AND id <= ?)',
       [user.karma, user.karma, user.join_date, user.karma, user.join_date, user.id]
