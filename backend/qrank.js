@@ -15,7 +15,8 @@ const ACTION_WEIGHTS = {
 };
 
 async function recalculateUserQRank(db, userId) {
-  const nowUnix = Math.floor(Date.now() / 1000);
+  const maxMsgRow = await db.get("SELECT MAX(date_unixtime) as max_date FROM messages");
+  const nowUnix = (maxMsgRow && maxMsgRow.max_date > 0) ? maxMsgRow.max_date : Math.floor(Date.now() / 1000);
 
   // 1. Get user messages
   const userMessages = await db.all(

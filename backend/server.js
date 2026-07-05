@@ -440,11 +440,13 @@ app.post('/api/admin/upload-json', upload.single('file'), async (req, res) => {
     else if (period === '7d') days = 7;
     else if (period === '30d') days = 30;
 
-    const nowUnix = Math.floor(Date.now() / 1000);
-    const currStart = nowUnix - days * 24 * 3600;
-    const currEnd = nowUnix;
-    const prevStart = nowUnix - 2 * days * 24 * 3600;
-    const prevEnd = nowUnix - days * 24 * 3600;
+    const maxMsgRow = await db.get("SELECT MAX(date_unixtime) as max_date FROM messages");
+    const referenceTime = (maxMsgRow && maxMsgRow.max_date > 0) ? maxMsgRow.max_date : Math.floor(Date.now() / 1000);
+
+    const currStart = referenceTime - days * 24 * 3600;
+    const currEnd = referenceTime;
+    const prevStart = referenceTime - 2 * days * 24 * 3600;
+    const prevEnd = referenceTime - days * 24 * 3600;
 
     const currentLeaderboard = await getLeaderboardForPeriod(db, currStart, currEnd);
     const previousLeaderboard = await getLeaderboardForPeriod(db, prevStart, prevEnd);
