@@ -26,7 +26,7 @@ Weby-QRank is a modern Telegram Mini App that turns chat life into a transparent
     *   *Anti-manipulation* — reaction weights between a pair of users decay over time, blocking collusions.
     *   *Reactor Reputation* — a like from a veteran user weighs more than from a newcomer.
     *   *Time Decay* — old messages lose weight (half-life: 30 days), keeping the rating dynamic.
-*   📊 **Interactive Score Breakdown**: Click on any member's card to instantly see the full structure of their rating (number of messages, replies, and reactions across three categories: Guru, Flooder, and Skeptic).
+*   📊 **Interactive Score Breakdown**: Click on any member's card to instantly see the full structure of their rating (number of messages, replies, and reactions across three categories: Guru, Flooder, and Skeptic). It also features an interactive **Time Decay Tooltip (v2.1.9)** that shows the exact math behind rating loss over time.
 *   🌐 **Localization UA | EN**: Convenient language switcher in the upper right corner with auto-save of the user's choice.
 *   🐳 **Docker-first Architecture**: Easy launch and scaling of multiple bots in isolated containers using a single configuration file.
 
