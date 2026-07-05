@@ -6,7 +6,7 @@ const multer = require('multer');
 const { getDb } = require('./db');
 const { getSettings, updateSettings } = require('./settings');
 const { startBot } = require('./bot');
-const { recalculateUserQRank } = require('./qrank');
+const { recalculateUserQRank, getLeaderboardForPeriod } = require('./qrank');
 
 const app = express();
 const upload = multer({
@@ -333,13 +333,14 @@ app.post('/api/admin/upload-json', upload.single('file'), async (req, res) => {
 
       // 2. Insert messages
       const msgStmt = await db.prepare(
-        `INSERT OR IGNORE INTO messages (message_id, chat_id, user_id) VALUES (?, ?, ?)`
+        `INSERT OR IGNORE INTO messages (message_id, chat_id, user_id, date_unixtime) VALUES (?, ?, ?, ?)`
       );
       for (const msg of messages) {
         if (!msg.id) continue;
         const userId = messageIdToUserId.get(msg.id);
+        const msgDate = parseInt(msg.date_unixtime || '0', 10);
         if (userId) {
-          await msgStmt.run([msg.id, chatId, userId]);
+          await msgStmt.run([msg.id, chatId, userId, msgDate]);
         }
       }
       await msgStmt.finalize();
@@ -417,18 +418,63 @@ app.post('/api/admin/upload-json', upload.single('file'), async (req, res) => {
 
   app.get('/api/leaderboard', async (req, res) => {
   try {
+    const { period } = req.query;
     const db = await getDb();
-    const topUsers = await db.all(
-      `SELECT 
-        u.id, u.username, u.first_name, u.karma, u.karma_flooder, u.karma_guru, u.karma_skeptic, u.message_count, u.engaged_message_count,
-        (SELECT COUNT(*) FROM replies r WHERE r.author_id = u.id) AS replies_count,
-        (SELECT COUNT(*) FROM reactions rx WHERE rx.author_id = u.id AND rx.emoji IN ('😁', '🤣', '🤪')) AS reactions_flooder_count,
-        (SELECT COUNT(*) FROM reactions rx WHERE rx.author_id = u.id AND rx.emoji IN ('🔥', '👍', '💯', '🤝', '🫡', '❤️', '❤', '❤️🔥', '👌', '😎')) AS reactions_guru_count,
-        (SELECT COUNT(*) FROM reactions rx WHERE rx.author_id = u.id AND rx.emoji IN ('🤔', '👀', '🤷‍♂️', '🤷\u200d♂️', '🤷', '🤯', '😱', '😢', '🙈', '🥴')) AS reactions_skeptic_count,
-        (SELECT COUNT(*) FROM reactions rx WHERE rx.author_id = u.id AND rx.emoji IN ('👎', '🤮', '💩')) AS reactions_negative_count
-       FROM users u ORDER BY u.karma DESC, u.join_date ASC, u.id ASC LIMIT 50`
-    );
-    res.json(topUsers);
+
+    if (!period || period === 'all') {
+      const topUsers = await db.all(
+        `SELECT 
+          u.id, u.username, u.first_name, u.karma, u.karma_flooder, u.karma_guru, u.karma_skeptic, u.message_count, u.engaged_message_count,
+          (SELECT COUNT(*) FROM replies r WHERE r.author_id = u.id) AS replies_count,
+          (SELECT COUNT(*) FROM reactions rx WHERE rx.author_id = u.id AND rx.emoji IN ('😁', '🤣', '🤪')) AS reactions_flooder_count,
+          (SELECT COUNT(*) FROM reactions rx WHERE rx.author_id = u.id AND rx.emoji IN ('🔥', '👍', '💯', '🤝', '🫡', '❤️', '❤', '❤️🔥', '👌', '😎')) AS reactions_guru_count,
+          (SELECT COUNT(*) FROM reactions rx WHERE rx.author_id = u.id AND rx.emoji IN ('🤔', '👀', '🤷‍♂️', '🤷\u200d♂️', '🤷', '🤯', '😱', '😢', '🙈', '🥴')) AS reactions_skeptic_count,
+          (SELECT COUNT(*) FROM reactions rx WHERE rx.author_id = u.id AND rx.emoji IN ('👎', '🤮', '💩')) AS reactions_negative_count
+         FROM users u ORDER BY u.karma DESC, u.join_date ASC, u.id ASC LIMIT 50`
+      );
+      return res.json(topUsers);
+    }
+
+    let days = 30;
+    if (period === '1d') days = 1;
+    else if (period === '7d') days = 7;
+    else if (period === '30d') days = 30;
+
+    const nowUnix = Math.floor(Date.now() / 1000);
+    const currStart = nowUnix - days * 24 * 3600;
+    const currEnd = nowUnix;
+    const prevStart = nowUnix - 2 * days * 24 * 3600;
+    const prevEnd = nowUnix - days * 24 * 3600;
+
+    const currentLeaderboard = await getLeaderboardForPeriod(db, currStart, currEnd);
+    const previousLeaderboard = await getLeaderboardForPeriod(db, prevStart, prevEnd);
+
+    const previousRanks = new Map();
+    previousLeaderboard.forEach((user, index) => {
+      previousRanks.set(user.id, index + 1);
+    });
+
+    const result = currentLeaderboard.slice(0, 50).map((user, index) => {
+      const currRank = index + 1;
+      const prevRank = previousRanks.get(user.id);
+      
+      let rank_change = null;
+      let is_new = false;
+      
+      if (prevRank !== undefined) {
+        rank_change = prevRank - currRank;
+      } else {
+        is_new = true;
+      }
+
+      return {
+        ...user,
+        rank_change,
+        is_new
+      };
+    });
+
+    res.json(result);
   } catch (error) {
     console.error('Leaderboard error:', error);
     res.status(500).json({ error: 'Internal Server Error' });

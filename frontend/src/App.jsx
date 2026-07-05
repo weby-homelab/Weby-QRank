@@ -49,7 +49,12 @@ const TRANSLATIONS = {
     calculated_as: 'Розраховано як:',
     useful_msg_part: 'корисних повідомлень з реакцією/відповіддю',
     total_msg_part: 'повідомлень всього',
-    detail_footer_note: '* Розрахунок балів враховує репутацію тих, хто ставить реакції, протидію взаємній накрутці, а також поступове згасання старих повідомлень (період напіврозпаду: 30 днів).'
+    detail_footer_note: '* Розрахунок балів враховує репутацію тих, хто ставить реакції, протидію взаємній накрутці, а також поступове згасання старих повідомлень (період напіврозпаду: 30 днів).',
+    period_1d: '1 день',
+    period_7d: '7 днів',
+    period_30d: '30 днів',
+    period_all: 'Всі',
+    new_badge: 'Новий ✨'
   },
   en: {
     site_title_fallback: '🏆 Activity Rating',
@@ -97,7 +102,12 @@ const TRANSLATIONS = {
     calculated_as: 'Calculated as:',
     useful_msg_part: 'useful messages with reaction/reply',
     total_msg_part: 'total messages',
-    detail_footer_note: '* Point calculation takes into account reactor reputation, mutual boosting countermeasures, and decay of old messages (half-life: 30 days).'
+    detail_footer_note: '* Point calculation takes into account reactor reputation, mutual boosting countermeasures, and decay of old messages (half-life: 30 days).',
+    period_1d: '1 Day',
+    period_7d: '7 Days',
+    period_30d: '30 Days',
+    period_all: 'All Time',
+    new_badge: 'New ✨'
   }
 }
 
@@ -113,6 +123,7 @@ function App() {
   const [lang, setLang] = useState(() => {
     return localStorage.getItem('qrank_lang') || 'en';
   });
+  const [period, setPeriod] = useState('all');
 
   const toggleLang = (l) => {
     setLang(l);
@@ -173,7 +184,7 @@ function App() {
         }
 
         // Fetch Leaderboard
-        const data = await fetchWithRetry(`${apiUrl}/api/leaderboard`, 5, 2000);
+        const data = await fetchWithRetry(`${apiUrl}/api/leaderboard?period=${period}`, 5, 2000);
         setLeaderboard(data);
 
         // Fetch user profile if WebApp info is available
@@ -205,7 +216,7 @@ function App() {
     };
 
     fetchData();
-  }, [lang]);
+  }, [lang, period]);
 
   const getRankClass = (index) => {
     if (index === 0) return 'rank-1';
@@ -390,6 +401,33 @@ function App() {
                 </div>
               </div>
             )}
+            <div className="period-selector">
+              <button 
+                className={`period-btn ${period === '1d' ? 'active' : ''}`} 
+                onClick={() => setPeriod('1d')}
+              >
+                {t.period_1d}
+              </button>
+              <button 
+                className={`period-btn ${period === '7d' ? 'active' : ''}`} 
+                onClick={() => setPeriod('7d')}
+              >
+                {t.period_7d}
+              </button>
+              <button 
+                className={`period-btn ${period === '30d' ? 'active' : ''}`} 
+                onClick={() => setPeriod('30d')}
+              >
+                {t.period_30d}
+              </button>
+              <button 
+                className={`period-btn ${period === 'all' ? 'active' : ''}`} 
+                onClick={() => setPeriod('all')}
+              >
+                {t.period_all}
+              </button>
+            </div>
+
             <div className="leaderboard">
               {leaderboard.filter(user => String(user.id) !== String(settings.chat_owner_id)).map((user, index) => {
                 const flooder = user.karma_flooder || 0;
@@ -408,7 +446,19 @@ function App() {
                       #{index + 1}
                     </div>
                     <div className="user-info">
-                      <span className="username">{user.first_name || user.username || t.anonymous}</span>
+                      <div className="username-wrapper">
+                        <span className="username">{user.first_name || user.username || t.anonymous}</span>
+                        {user.rank_change !== undefined && user.rank_change !== null && user.rank_change !== 0 && (
+                          <span className={`rank-change ${user.rank_change > 0 ? 'positive' : 'negative'}`}>
+                            {user.rank_change > 0 ? `+${user.rank_change} 🔼` : `${user.rank_change} 🔽`}
+                          </span>
+                        )}
+                        {user.is_new && period !== 'all' && (
+                          <span className="rank-change new-entry">
+                            {t.new_badge}
+                          </span>
+                        )}
+                      </div>
                       <div className="karma-bar-container">
                         {flooder > 0 && (
                           <div 
