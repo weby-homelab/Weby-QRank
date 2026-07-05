@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ## [2.0.7] - 2026-06-23
 ### Changed
-- **Розгортання та виправлення Docker Compose**: Переведено контейнери на актуальний образ `webyhomelab/karma-2-community-app:latest` на інфраструктурі LXC200.
+- **Розгортання та виправлення Docker Compose**: Переведено контейнери на актуальний образ `webyhomelab/weby-qrank:latest` на інфраструктурі LXC200.
 
 ## [2.0.6] - 2026-06-23
 ### Added
@@ -19,7 +19,7 @@ All notable changes to this project will be documented in this file.
 ## [2.0.5] - 2026-06-23
 ### Changed
 - **Стилізація посилань у футері**: Прибрано підкреслення посилань у футері (`text-decoration: none !important`) на всіх станах для більш чистого Bento дизайну.
-- **Оновлення репозиторію**: Вказано посилання на новий публічний репозиторій `https://github.com/weby-homelab/karma-2-community-app`.
+- **Оновлення репозиторію**: Вказано посилання на новий публічний репозиторій `https://github.com/weby-homelab/Weby-QRank`.
 
 ## [0.8.6] - 2026-06-13
 ### Added
