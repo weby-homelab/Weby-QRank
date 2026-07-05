@@ -54,7 +54,12 @@ const TRANSLATIONS = {
     period_7d: '7 днів',
     period_30d: '30 днів',
     period_all: 'Всі',
-    new_badge: 'Новий ✨'
+    new_badge: 'Новий ✨',
+    tooltip_decay_title: '⏳ Часове згасання (Decay)',
+    tooltip_decay_desc: 'Вага повідомлень і реакцій поступово згасає з часом (період напіврозпаду: 30 днів).',
+    tooltip_raw_final: 'Рейтинг без згасання',
+    tooltip_actual_karma: 'Фактичний QRank',
+    tooltip_decay_loss: 'Зменшення через вік'
   },
   en: {
     site_title_fallback: '🏆 Activity Rating',
@@ -107,7 +112,12 @@ const TRANSLATIONS = {
     period_7d: '7 Days',
     period_30d: '30 Days',
     period_all: 'All Time',
-    new_badge: 'New ✨'
+    new_badge: 'New ✨',
+    tooltip_decay_title: '⏳ Time Decay',
+    tooltip_decay_desc: 'Message and reaction weights gradually decay over time (half-life: 30 days).',
+    tooltip_raw_final: 'Rating without decay',
+    tooltip_actual_karma: 'Actual QRank',
+    tooltip_decay_loss: 'Age reduction'
   }
 }
 
@@ -120,6 +130,7 @@ function App() {
   const [showInfo, setShowInfo] = useState(false);
   const [activeUserDetail, setActiveUserDetail] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
+  const [showDecayTooltip, setShowDecayTooltip] = useState(false);
   const [lang, setLang] = useState(() => {
     return localStorage.getItem('qrank_lang') || 'en';
   });
@@ -135,6 +146,7 @@ function App() {
   const handleUserClick = async (user) => {
     if (!user || !user.id) return;
     setDetailLoading(true);
+    setShowDecayTooltip(false);
     try {
       const apiUrl = import.meta.env.VITE_API_URL || '';
       const response = await fetch(`${apiUrl}/api/user/${user.id}?period=${period}`);
@@ -584,56 +596,98 @@ function App() {
         );
       })()}
 
-      {activeUserDetail && (
-        <>
-          <div className="modal-backdrop" onClick={() => setActiveUserDetail(null)} />
-          <div className="user-detail-modal glass-panel">
-            <button className="modal-close-btn" onClick={() => setActiveUserDetail(null)} aria-label={t.modal_close}>
-              &times;
-            </button>
-            <div className="user-detail-header">
-              <h3 className="user-detail-name">👤 {activeUserDetail.first_name || activeUserDetail.username || t.anonymous}</h3>
-              <div className="user-detail-rank-karma">
-                <span>{t.detail_rank} <strong>#{activeUserDetail.rank}</strong></span>
-                <span>{t.detail_karma} <strong className="user-detail-karma-value">{Math.round(activeUserDetail.karma)} 🔥</strong></span>
+      {activeUserDetail && (() => {
+        const rawSum = (activeUserDetail.message_count * 0.5) +
+                       (activeUserDetail.replies_count * 1.0) +
+                       (activeUserDetail.reactions_guru_count * 2.0) +
+                       (activeUserDetail.reactions_flooder_count * 1.5) +
+                       (activeUserDetail.reactions_skeptic_count * 1.0) -
+                       (activeUserDetail.reactions_negative_count * 1.0);
+
+        const Q = (activeUserDetail.engaged_message_count + 1) / (activeUserDetail.message_count + 1);
+        const rawFinal = rawSum * Q;
+        const actualKarma = activeUserDetail.karma;
+        const decayLoss = Math.max(0, rawFinal - actualKarma);
+        const decayPct = rawFinal > 0 ? Math.round((decayLoss / rawFinal) * 100) : 0;
+
+        return (
+          <>
+            <div className="modal-backdrop" onClick={() => setActiveUserDetail(null)} />
+            <div className="user-detail-modal glass-panel">
+              <button className="modal-close-btn" onClick={() => setActiveUserDetail(null)} aria-label={t.modal_close}>
+                &times;
+              </button>
+              <div className="user-detail-header">
+                <h3 className="user-detail-name">👤 {activeUserDetail.first_name || activeUserDetail.username || t.anonymous}</h3>
+                <div className="user-detail-rank-karma">
+                  <span>{t.detail_rank} <strong>#{activeUserDetail.rank}</strong></span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                    {t.detail_karma}{' '}
+                    <strong className="user-detail-karma-value" style={{ marginLeft: '4px' }}>
+                      {Math.round(activeUserDetail.karma)} 🔥
+                    </strong>
+                    <button 
+                      className="decay-tooltip-trigger" 
+                      onClick={() => setShowDecayTooltip(!showDecayTooltip)}
+                      title={t.tooltip_decay_title}
+                    >
+                      ℹ️
+                    </button>
+                  </span>
+                </div>
               </div>
+
+              {showDecayTooltip && (
+                <div className="decay-tooltip-box">
+                  <div className="decay-tooltip-title">{t.tooltip_decay_title}</div>
+                  <div className="decay-tooltip-desc">{t.tooltip_decay_desc}</div>
+                  <div className="decay-tooltip-grid">
+                    <span>{t.tooltip_raw_final}:</span>
+                    <strong>{rawFinal.toFixed(2)}</strong>
+                    <span>{t.tooltip_actual_karma}:</span>
+                    <strong>{actualKarma.toFixed(2)}</strong>
+                    <span>{t.tooltip_decay_loss}:</span>
+                    <span className="decay-loss-val">-{decayLoss.toFixed(2)} ({decayPct}%)</span>
+                  </div>
+                </div>
+              )}
+
+              <div className="detail-section-title">{t.detail_title}</div>
+              <div className="detail-grid">
+                <div className="detail-grid-item-label">{t.sent_msg}</div>
+                <div className="detail-grid-item-val">{activeUserDetail.message_count} ({lang === 'ua' ? 'вага' : 'weight'} ×0.50)</div>
+
+                <div className="detail-grid-item-label">{t.received_replies}</div>
+                <div className="detail-grid-item-val">{activeUserDetail.replies_count} ({lang === 'ua' ? 'вага' : 'weight'} ×1.00)</div>
+
+                <div className="detail-grid-item-label">{t.reactions_guru}</div>
+                <div className="detail-grid-item-val">{activeUserDetail.reactions_guru_count} ({lang === 'ua' ? 'вага' : 'weight'} ×2.00)</div>
+
+                <div className="detail-grid-item-label">{t.reactions_flooder}</div>
+                <div className="detail-grid-item-val">{activeUserDetail.reactions_flooder_count} ({lang === 'ua' ? 'вага' : 'weight'} ×1.50)</div>
+
+                <div className="detail-grid-item-label">{t.reactions_skeptic}</div>
+                <div className="detail-grid-item-val">{activeUserDetail.reactions_skeptic_count} ({lang === 'ua' ? 'вага' : 'weight'} ×1.00)</div>
+
+                <div className="detail-grid-item-label">{t.reactions_negative}</div>
+                <div className="detail-grid-item-val">{activeUserDetail.reactions_negative_count} ({lang === 'ua' ? 'вага' : 'weight'} ×-1.00)</div>
+              </div>
+
+              <div className="detail-section-title">{t.detail_quality_title}</div>
+              <div className="detail-quality-box">
+                {t.coeff_q} <strong>{((activeUserDetail.engaged_message_count + 1) / (activeUserDetail.message_count + 1)).toFixed(2)}</strong>
+                <br />
+                <span style={{ fontSize: '0.72rem', opacity: 0.85 }}>
+                  {t.calculated_as} ({activeUserDetail.engaged_message_count} {t.useful_msg_part} + 1) / ({activeUserDetail.message_count} {t.total_msg_part} + 1)
+                </span>
+              </div>
+              <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '12px', marginBottom: 0, fontStyle: 'italic' }}>
+                {t.detail_footer_note}
+              </p>
             </div>
-
-            <div className="detail-section-title">{t.detail_title}</div>
-            <div className="detail-grid">
-              <div className="detail-grid-item-label">{t.sent_msg}</div>
-              <div className="detail-grid-item-val">{activeUserDetail.message_count} ({lang === 'ua' ? 'вага' : 'weight'} ×0.50)</div>
-
-              <div className="detail-grid-item-label">{t.received_replies}</div>
-              <div className="detail-grid-item-val">{activeUserDetail.replies_count} ({lang === 'ua' ? 'вага' : 'weight'} ×1.00)</div>
-
-              <div className="detail-grid-item-label">{t.reactions_guru}</div>
-              <div className="detail-grid-item-val">{activeUserDetail.reactions_guru_count} ({lang === 'ua' ? 'вага' : 'weight'} ×2.00)</div>
-
-              <div className="detail-grid-item-label">{t.reactions_flooder}</div>
-              <div className="detail-grid-item-val">{activeUserDetail.reactions_flooder_count} ({lang === 'ua' ? 'вага' : 'weight'} ×1.50)</div>
-
-              <div className="detail-grid-item-label">{t.reactions_skeptic}</div>
-              <div className="detail-grid-item-val">{activeUserDetail.reactions_skeptic_count} ({lang === 'ua' ? 'вага' : 'weight'} ×1.00)</div>
-
-              <div className="detail-grid-item-label">{t.reactions_negative}</div>
-              <div className="detail-grid-item-val">{activeUserDetail.reactions_negative_count} ({lang === 'ua' ? 'вага' : 'weight'} ×-1.00)</div>
-            </div>
-
-            <div className="detail-section-title">{t.detail_quality_title}</div>
-            <div className="detail-quality-box">
-              {t.coeff_q} <strong>{((activeUserDetail.engaged_message_count + 1) / (activeUserDetail.message_count + 1)).toFixed(2)}</strong>
-              <br />
-              <span style={{ fontSize: '0.72rem', opacity: 0.85 }}>
-                {t.calculated_as} ({activeUserDetail.engaged_message_count} {t.useful_msg_part} + 1) / ({activeUserDetail.message_count} {t.total_msg_part} + 1)
-              </span>
-            </div>
-            <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '12px', marginBottom: 0, fontStyle: 'italic' }}>
-              {t.detail_footer_note}
-            </p>
-          </div>
-        </>
-      )}
+          </>
+        );
+      })()}
     </>
   )
 }
