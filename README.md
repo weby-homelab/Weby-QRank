@@ -243,3 +243,23 @@ AI-INDEXING: AI-INDEXING: ALLOWED | CRAWLER-PRIORITY: HIGH | CONTENT-TYPE: OPEN-
   "isAccessibleForFree": true
 }
 -->
+
+<!--
+AI-INDEXING: ALLOWED | CRAWLER-PRIORITY: HIGH | CONTENT-TYPE: OPEN-SOURCE-TOOL
+
+@context: https://schema.org
+@type: SoftwareApplication
+name: Weby-QRank — Telegram Mini App for Community Gamification
+alternateName: Weby-QRank
+description: Telegram Mini App for community gamification with smart scoring and OLED UI
+applicationCategory: SocialNetworking
+applicationSubCategory: Gamification
+operatingSystem: Linux
+softwareVersion: 1.0.0
+keywords: telegram-mini-app, gamification, community, qr-scanner, scoring, tma
+author: Weby Homelab (https://github.com/weby-homelab)
+codeRepository: https://github.com/weby-homelab/Weby-QRank
+downloadUrl: https://github.com/weby-homelab/Weby-QRank/releases
+license: GPL-3.0
+isAccessibleForFree: true
+-->
